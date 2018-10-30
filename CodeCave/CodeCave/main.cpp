@@ -39,23 +39,30 @@ void DllProcess() {
 		"xxxxx??x????x",
 		"\x8b\x02\x50\x8d\x4c\x00\x00\x68\x00\x00\x00\x00\x51");
 
+	DWORD dwAmmoSpeedAddress = FindAddress("ac_client.exe",
+		"xx?????xx?xxxx",
+		"\x0f\xbf\x00\x00\x00\x00\x00\x8b\x56\x00\x89\x0a\x8b\x76");
+
 	dwAddressAxis -= 3;
 
 	MessageBoxAddress(dwAddress, false);
 	MessageBoxAddress(dwAddressAxis, false);
 	MessageBoxAddress(dwHealthAddress, false);
 	MessageBoxAddress(dwAmmoConstAddress, false);
+	MessageBoxAddress(dwAmmoSpeedAddress, false);
 
 	// JMP addresses after injected assembler
 	dwAmmoJmpBack = dwAddress + 0x7;
 	dwAxisJmpBack = dwAddressAxis + 0x6;
 	dwHealthJmpBack = dwHealthAddress + 0x6;
 	dwAmmoConstJmpBack = dwAmmoConstAddress + 0x7;
+	dwAmmoSpeedJmpBack = dwAmmoSpeedAddress + 0x7;
 
 	WriteMemoryJmp((BYTE*)dwAddress, (DWORD)InfiniteAmmo, 7);
 	WriteMemoryJmp((BYTE*)dwAddressAxis, (DWORD)FlyHack, 6);
 	WriteMemoryJmp((BYTE*)dwHealthAddress, (DWORD)HealthHack, 6);
 	WriteMemoryJmp((BYTE*)dwAmmoConstAddress, (DWORD)AmmoAddressHack, 7);
+	WriteMemoryJmp((BYTE*)dwAmmoSpeedAddress, (DWORD)AmmoSpeedHack, 7);
 }
 
 bool __stdcall DllMain(HINSTANCE hInstance,

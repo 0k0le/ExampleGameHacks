@@ -66,6 +66,10 @@ unsigned int __stdcall AmmoHackThread(LPVOID arg) {
 			bUnlimitedAmmo = !bUnlimitedAmmo;
 		}
 
+		if(GetAsyncKeyState(VK_F4)) {
+			bAmmoSpeed = !bAmmoSpeed;
+		}
+
 	}
 
 	return 0;
