@@ -21,9 +21,12 @@ DWORD dwHealthRegister = 0;
 DWORD dwHealthPtr = 0;
 DWORD dwAmmoConstJmpBack = 0;
 DWORD dwAmmoSpeedJmpBack = 0;
+//DWORD dwRecoilJmpBack = 0;
+DWORD dwRecoilBackJmpBack = 0;
 
 bool bUnlimitedAmmo = false;
 bool bAmmoSpeed = false;
+bool bRecoilBack = false;
 
 // Assembler code to increase ammo and return back to program flow
 __declspec( naked ) void InfiniteAmmo() {
@@ -65,6 +68,25 @@ __declspec( naked ) void AmmoAddressHack() {
 		push eax
 		lea ecx, [esp + 0x10]
 		jmp [dwAmmoConstJmpBack]
+	}
+
+}
+
+__declspec( naked ) void RecoilBackHack() {
+
+	__asm
+	{
+
+		cmp bRecoilBack, 0x1
+		jl BACKRECOIL
+		jmp [dwRecoilBackJmpBack]
+
+		BACKRECOIL:
+		mov ecx, [eax]
+		mov edx, [eax + 0x4]
+		mov eax, [eax + 0x8]
+		jmp [dwRecoilBackJmpBack]
+
 	}
 
 }

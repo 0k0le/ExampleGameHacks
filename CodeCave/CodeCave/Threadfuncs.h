@@ -16,6 +16,9 @@
 #include <stdio.h>
 
 #include "asmfunc.h"
+#include "Signature.h"
+
+DWORD dwPublicRecoilAddress = 0;
 
 // Manages Jump/Fly
 unsigned int __stdcall FlyHackThread(LPVOID arg) {
@@ -60,14 +63,27 @@ unsigned int __stdcall FlyHackThread(LPVOID arg) {
 unsigned int __stdcall AmmoHackThread(LPVOID arg) {
 
 	while(true) {
-		Sleep(100);
+		Sleep(150);
 
-		if(GetAsyncKeyState(VK_F3)) {
+		if(GetAsyncKeyState(VK_F3) << 15) {
 			bUnlimitedAmmo = !bUnlimitedAmmo;
 		}
 
-		if(GetAsyncKeyState(VK_F4)) {
+		if(GetAsyncKeyState(VK_F4) << 15) {
 			bAmmoSpeed = !bAmmoSpeed;
+		}
+
+		if (GetAsyncKeyState(VK_F5) << 15) {
+			bRecoilBack = !bRecoilBack;
+
+			if (bRecoilBack) {
+				WriteMemoryNoOp((BYTE*)dwPublicRecoilAddress, 3);
+			}
+			else {
+				WriteMemoryCode((BYTE*)dwPublicRecoilAddress, 0xD8);
+				WriteMemoryCode((BYTE*)(dwPublicRecoilAddress + 0x1), 0x4B);
+				WriteMemoryCode((BYTE*)(dwPublicRecoilAddress + 0x2), 0x50);
+			}
 		}
 
 	}

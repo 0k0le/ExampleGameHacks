@@ -63,6 +63,16 @@ void WriteMemoryNoOp(BYTE *dwAddress, DWORD dwLen) {
 	}
 }
 
+void WriteMemoryCode(BYTE* address, BYTE data) {
+	DWORD oldProtection = NULL;
+
+	VirtualProtect((LPVOID)address, 1, PAGE_EXECUTE_READWRITE, &oldProtection);
+
+	*address = data;
+
+	VirtualProtect((LPVOID)address, 1, oldProtection, NULL);
+}
+
 // Writes over section with jmp and NOPS the extra bytes
 void WriteMemoryJmp(BYTE* dwAddress, DWORD dwJumpAddress, DWORD size) {
 	DWORD dwOld = NULL;
@@ -77,7 +87,9 @@ void WriteMemoryJmp(BYTE* dwAddress, DWORD dwJumpAddress, DWORD size) {
 
 	*((DWORD *)(dwAddress + 0x1)) = dwRelAddress;
 
-	WriteMemoryNoOp(dwAddress + 0x5, size - 0x5);
+	if (size > 5) {
+		WriteMemoryNoOp(dwAddress + 0x5, size - 0x5);
+	}
 
 	VirtualProtect((LPVOID) dwAddress, size, dwOld, NULL);
 }
