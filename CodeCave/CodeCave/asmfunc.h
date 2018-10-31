@@ -3,7 +3,7 @@
 * File: asmfunc.h
 *
 * Author: Matthew Todd Geiger
-* 
+*
 * Time: 01:17
 *
 * Brief: This file contains the raw assembler code
@@ -21,21 +21,20 @@ DWORD dwHealthRegister = 0;
 DWORD dwHealthPtr = 0;
 DWORD dwAmmoConstJmpBack = 0;
 DWORD dwAmmoSpeedJmpBack = 0;
-//DWORD dwRecoilJmpBack = 0;
-DWORD dwRecoilBackJmpBack = 0;
+DWORD dwRecoilJmpBack = 0;
 
 bool bUnlimitedAmmo = false;
 bool bAmmoSpeed = false;
 bool bRecoilBack = false;
 
 // Assembler code to increase ammo and return back to program flow
-__declspec( naked ) void InfiniteAmmo() {
+__declspec(naked) void InfiniteAmmo() {
 
-	__asm 
+	__asm
 	{
 		cmp bUnlimitedAmmo, 0x1
 		jl SWITCHUNLIMITEDAMMO
-		INC [esi]
+		INC[ esi]
 		push edi
 		mov edi, [esp + 0x14]
 		jmp [dwAmmoJmpBack]
@@ -51,11 +50,11 @@ __declspec( naked ) void InfiniteAmmo() {
 }
 
 // Assembler code used to check ammo status
-__declspec( naked ) void AmmoAddressHack() {
+__declspec(naked) void AmmoAddressHack() {
 
 	__asm
 	{
-		cmp [edx], 254
+		cmp[edx], 254
 		jae MAXAMMO
 		mov eax, [edx]
 		push eax
@@ -63,7 +62,7 @@ __declspec( naked ) void AmmoAddressHack() {
 		jmp [dwAmmoConstJmpBack]
 
 		MAXAMMO:
-		dec [edx]
+		dec[edx]
 		mov eax, [edx]
 		push eax
 		lea ecx, [esp + 0x10]
@@ -72,26 +71,32 @@ __declspec( naked ) void AmmoAddressHack() {
 
 }
 
-__declspec( naked ) void RecoilBackHack() {
+// Manages recoil pushing and calling w/ stack
+__declspec(naked) void RecoilHack() {
 
 	__asm
 	{
 
 		cmp bRecoilBack, 0x1
 		jl BACKRECOIL
-		jmp [dwRecoilBackJmpBack]
+		lea ecx, [esp + 0x1C]
+		mov ecx, esi
+		jmp [dwRecoilJmpBack]
 
 		BACKRECOIL:
-		mov ecx, [eax]
-		mov edx, [eax + 0x4]
-		mov eax, [eax + 0x8]
-		jmp [dwRecoilBackJmpBack]
+		push eax
+		lea ecx, [esp + 0x1C]
+		push ecx
+		mov ecx, esi
+		call edx
+		jmp [dwRecoilJmpBack]
 
 	}
 
 }
 
-__declspec( naked ) void AmmoSpeedHack() {
+// Super fully auto
+__declspec(naked) void AmmoSpeedHack() {
 
 	__asm
 	{
@@ -108,28 +113,28 @@ __declspec( naked ) void AmmoSpeedHack() {
 }
 
 // Assembler code to find Y axis info
-__declspec( naked ) void FlyHack() {
+__declspec(naked) void FlyHack() {
 
 	__asm
 	{
-		mov [esi + 0x38], eax
-		mov [esi + 0x3C], ecx
+		mov[esi + 0x38], eax
+		mov[esi + 0x3C], ecx
 		mov dwAxisRegister, esi
-		jmp [dwAxisJmpBack]
+		jmp[dwAxisJmpBack]
 	}
 
 
 }
 
 // Assembler code to get health info
-__declspec( naked ) void HealthHack() {
+__declspec(naked) void HealthHack() {
 
 
 	__asm
 	{
 		mov dwHealthRegister, esi
 		mov eax, [esi + 0xF8]
-		jmp [dwHealthJmpBack]
+		jmp[dwHealthJmpBack]
 	}
 
 }
