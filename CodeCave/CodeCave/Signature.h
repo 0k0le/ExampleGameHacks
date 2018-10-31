@@ -81,6 +81,8 @@ void WriteMemoryNoOp(BYTE *dwAddress, DWORD dwLen) {
 			*(dwAddress + i) = 0x90;
 		}
 	}
+
+	VirtualProtect(dwAddress, dwLen, dwOld, NULL);
 }
 
 void WriteMemoryCode(BYTE* address, BYTE data) {

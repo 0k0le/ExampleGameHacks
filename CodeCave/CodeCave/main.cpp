@@ -75,8 +75,8 @@ void DllProcess() {
 		MessageBoxAddress(dwRecoilAddress, false);
 	}
 
-	printf("Writing Offests...\n");
 	// JMP addresses after injected assembler
+	printf("Writing Offests...\n");
 	dwAmmoJmpBack = dwAddress + 0x7;
 	dwAxisJmpBack = dwAddressAxis + 0x6;
 	dwHealthJmpBack = dwHealthAddress + 0x6;
@@ -84,6 +84,7 @@ void DllProcess() {
 	dwAmmoSpeedJmpBack = dwAmmoSpeedAddress + 0x7;
 	dwRecoilJmpBack = dwRecoilAddress + 0xA;
 
+	// Code Injection
 	printf("Injecting Code...\n");
 	WriteMemoryJmp((BYTE*)dwAddress, (DWORD)InfiniteAmmo, 7);
 	WriteMemoryJmp((BYTE*)dwAddressAxis, (DWORD)FlyHack, 6);
