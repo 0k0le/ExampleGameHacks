@@ -62,6 +62,7 @@ void DllProcess() {
 	char szSuperFullAuto[] = "Super Full Auto";
 	char szNoRecoil[] = "No Recoil";
 
+	// Writing to debug file
 	AddToWriteBuffer(dwAddress, szUnAmmo);
 	AddToWriteBuffer(dwAddressAxis, szSuJump);
 	AddToWriteBuffer(dwHealthAddress, szUnHealth);
