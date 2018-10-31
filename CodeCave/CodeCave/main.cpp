@@ -20,8 +20,11 @@
 #include "asmfunc.h"
 #include "Threadfuncs.h"
 
+bool bMsgBox = false;
 
 void DllProcess() {
+	printf("Finding Assembler Instruction Locations");
+
 	// Find memory addresses
 	DWORD dwAddress = FindAddress("ac_client.exe",
 		"xxxxx??xx??x????xxx?xxxxx??xxxxxxxxxxxxx",
@@ -50,13 +53,29 @@ void DllProcess() {
 
 	dwAddressAxis -= 3;
 
-	MessageBoxAddress(dwAddress, false);
-	MessageBoxAddress(dwAddressAxis, false);
-	MessageBoxAddress(dwHealthAddress, false);
-	MessageBoxAddress(dwAmmoConstAddress, false);
-	MessageBoxAddress(dwAmmoSpeedAddress, false);
-	MessageBoxAddress(dwRecoilAddress, false);
+	printf("Writing Addresses to %s\n", szFile);
 
+	AddToWriteBuffer(dwAddress);
+	AddToWriteBuffer(dwAddressAxis);
+	AddToWriteBuffer(dwHealthAddress);
+	AddToWriteBuffer(dwAmmoConstAddress);
+	AddToWriteBuffer(dwAmmoSpeedAddress);
+	AddToWriteBuffer(dwRecoilAddress);
+
+	WriteToFile();
+
+	if (bMsgBox) {
+		printf("MessageBox Flag Recognized, Displaying Addresses...\n");
+
+		MessageBoxAddress(dwAddress, false);
+		MessageBoxAddress(dwAddressAxis, false);
+		MessageBoxAddress(dwHealthAddress, false);
+		MessageBoxAddress(dwAmmoConstAddress, false);
+		MessageBoxAddress(dwAmmoSpeedAddress, false);
+		MessageBoxAddress(dwRecoilAddress, false);
+	}
+
+	printf("Writing Offests...\n");
 	// JMP addresses after injected assembler
 	dwAmmoJmpBack = dwAddress + 0x7;
 	dwAxisJmpBack = dwAddressAxis + 0x6;
@@ -65,6 +84,7 @@ void DllProcess() {
 	dwAmmoSpeedJmpBack = dwAmmoSpeedAddress + 0x7;
 	dwRecoilJmpBack = dwRecoilAddress + 0xA;
 
+	printf("Injecting Code...\n");
 	WriteMemoryJmp((BYTE*)dwAddress, (DWORD)InfiniteAmmo, 7);
 	WriteMemoryJmp((BYTE*)dwAddressAxis, (DWORD)FlyHack, 6);
 	WriteMemoryJmp((BYTE*)dwHealthAddress, (DWORD)HealthHack, 6);
@@ -79,6 +99,12 @@ bool __stdcall DllMain(HINSTANCE hInstance,
 {
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
+		AllocConsole();
+		freopen("CONOUT$", "w", stdout);
+		Sleep(500);
+
+		printf("Hack Initiated...\n");
+
 		DisableThreadLibraryCalls(hInstance);
 		DllProcess();
 
@@ -86,6 +112,14 @@ bool __stdcall DllMain(HINSTANCE hInstance,
 		_beginthreadex(0, 0, &FlyHackThread, 0, 0, 0);
 		_beginthreadex(0, 0, &HealthHackThread, 0, 0, 0);
 		_beginthreadex(0, 0, &AmmoHackThread, 0, 0, 0);
+
+		printf("\nProcess Seems Intact...\nClosing Console In 5 Seconds...\n ");
+		Sleep(5000);
+
+		HWND hWnd = GetConsoleWindow();
+		ShowWindow(hWnd, SW_HIDE);
+
+		FreeConsole();
 		break;
 	}
 

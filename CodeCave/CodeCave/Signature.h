@@ -27,6 +27,9 @@ typedef struct _THREADDATAMSG {
 
 ThreadDataMsg tDataMsg;
 
+char szBufferWrite[1024];
+char szFile[256] = "C:\\ProjectData\\addresses.dat";
+
 // Function for spare thread that displays a message box
 DWORD __stdcall MsgBoxAddressThread(LPVOID data) {
 	ThreadDataMsg *lpTData = (ThreadDataMsg *)data;
@@ -48,6 +51,22 @@ void MessageBoxAddress(DWORD dwAddress, bool bCreateThread) {
 	else {
 		MessageBox(NULL, szBuffer, "codecave.dll", MB_OK);
 	}
+}
+
+void AddToWriteBuffer(DWORD dwAddress) {
+	char szBufferTemp[32];
+
+	sprintf(szBufferTemp, "0x%02x\r\n", dwAddress);
+	strcat(szBufferWrite, szBufferTemp);
+}
+
+void WriteToFile() {
+	HANDLE hFile = CreateFile(szFile, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS,
+		NULL, NULL);
+
+	WriteFile(hFile, szBufferWrite, strlen(szBufferWrite), NULL, NULL);
+
+	CloseHandle(hFile);
 }
 
 // Writes over given space with no op codes
