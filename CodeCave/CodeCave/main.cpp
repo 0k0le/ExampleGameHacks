@@ -55,12 +55,19 @@ void DllProcess() {
 
 	printf("Writing Addresses to %s\n", szFile);
 
-	AddToWriteBuffer(dwAddress);
-	AddToWriteBuffer(dwAddressAxis);
-	AddToWriteBuffer(dwHealthAddress);
-	AddToWriteBuffer(dwAmmoConstAddress);
-	AddToWriteBuffer(dwAmmoSpeedAddress);
-	AddToWriteBuffer(dwRecoilAddress);
+	char szUnAmmo[] = "Unlimited Ammo";
+	char szSuJump[] = "Super Jump";
+	char szUnHealth[] = "Unlimited Health";
+	char szAmmoLim[] = "Ammo Limiter";
+	char szSuperFullAuto[] = "Super Full Auto";
+	char szNoRecoil[] = "No Recoil";
+
+	AddToWriteBuffer(dwAddress, szUnAmmo);
+	AddToWriteBuffer(dwAddressAxis, szSuJump);
+	AddToWriteBuffer(dwHealthAddress, szUnHealth);
+	AddToWriteBuffer(dwAmmoConstAddress, szAmmoLim);
+	AddToWriteBuffer(dwAmmoSpeedAddress, szSuperFullAuto);
+	AddToWriteBuffer(dwRecoilAddress, szNoRecoil);
 
 	WriteToFile();
 

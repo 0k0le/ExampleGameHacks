@@ -53,10 +53,10 @@ void MessageBoxAddress(DWORD dwAddress, bool bCreateThread) {
 	}
 }
 
-void AddToWriteBuffer(DWORD dwAddress) {
+void AddToWriteBuffer(DWORD dwAddress, char *szMessage) {
 	char szBufferTemp[32];
 
-	sprintf(szBufferTemp, "0x%02x\r\n", dwAddress);
+	sprintf(szBufferTemp, "%s: 0x%02x\r\n", szMessage, dwAddress);
 	strcat(szBufferWrite, szBufferTemp);
 }
 
