@@ -118,8 +118,8 @@ void WriteMemoryJmp(BYTE* dwAddress, DWORD dwJumpAddress, DWORD size) {
 
 // Grabs Module Info
 MODULEINFO GetModInfo(char *szName) {
-	MODULEINFO modInfo = { 0 };
-	HMODULE hMod = GetModuleHandle(szName);
+	MODULEINFO	modInfo = { 0 };
+	HMODULE		hMod	= GetModuleHandle(szName);
 
 	if (!hMod) {
 		fprintf(stderr, "ERROR: GetModuleHandle()");
@@ -132,17 +132,16 @@ MODULEINFO GetModInfo(char *szName) {
 
 // Use Signature Scanning to Find Address to Overwrite 
 DWORD FindAddress(char *szName, char *szMask, char *szSignature) {
-	MODULEINFO modInfo = GetModInfo(szName);
+	MODULEINFO	 modInfo	= GetModInfo(szName);
 
 	if (!modInfo.EntryPoint) {
 		fprintf(stderr, "ERROR: GetModInfo()");
 		return NULL;
 	}
 
-	DWORD dwBase = (DWORD)modInfo.lpBaseOfDll;
-	DWORD dwSize = (DWORD)modInfo.SizeOfImage;
-
-	DWORD dwLen = (DWORD)strlen(szMask);
+	DWORD		dwBase		= (DWORD)modInfo.lpBaseOfDll;
+	DWORD		dwSize		= (DWORD)modInfo.SizeOfImage;
+	DWORD		dwLen		= (DWORD)strlen(szMask);
 
 	for (DWORD i = 0; i < dwSize - dwLen; i++) {
 		bool status = true;

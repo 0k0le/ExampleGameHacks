@@ -20,9 +20,9 @@
 
 // Manages Jump/Fly
 unsigned int __stdcall FlyHackThread(LPVOID arg) {
-	bool bStay = false;
-	bool bSwitch = false;
-	float fYAxis = NULL;
+	bool	bStay	= false;
+	bool	bSwitch = false;
+	float	fYAxis	= NULL;
 
 	while (true) {
 		Sleep(100);
@@ -30,7 +30,7 @@ unsigned int __stdcall FlyHackThread(LPVOID arg) {
 		dwAxisPtr = dwAxisRegister + 0x3C;
 
 		if (GetAsyncKeyState(VK_F2)) {
-			fYAxis = *(float *)dwAxisPtr;
+			fYAxis	= *(float *)dwAxisPtr;
 			bSwitch = !bSwitch;
 		}
 
@@ -42,14 +42,15 @@ unsigned int __stdcall FlyHackThread(LPVOID arg) {
 			if (GetAsyncKeyState(VK_SPACE) << 15) {
 				for (float i = 0.0f; i < 13.0f; i += 0.10f) {
 					Sleep(2);
+
 					*(float *)dwAxisPtr += 0.10f;
-					fYAxis = *(float *)dwAxisPtr;
+					fYAxis				= *(float *)dwAxisPtr;
 				}
 			}
 
 			if (GetAsyncKeyState(VK_CONTROL) << 15) {
-				bStay = !bStay;
-				fYAxis = *(float *)dwAxisPtr;
+				bStay	= !bStay;
+				fYAxis	= *(float *)dwAxisPtr;
 			}
 		}
 	}
@@ -64,15 +65,15 @@ unsigned int __stdcall AmmoHackThread(LPVOID arg) {
 		Sleep(150);
 
 		if (GetAsyncKeyState(VK_F3) << 15) {
-			bUnlimitedAmmo = !bUnlimitedAmmo;
+			bUnlimitedAmmo	= !bUnlimitedAmmo;
 		}
 
 		if (GetAsyncKeyState(VK_F4) << 15) {
-			bAmmoSpeed = !bAmmoSpeed;
+			bAmmoSpeed		= !bAmmoSpeed;
 		}
 
 		if (GetAsyncKeyState(VK_F5) << 15) {
-			bRecoilBack = !bRecoilBack;
+			bRecoilBack		= !bRecoilBack;
 		}
 
 	}
@@ -82,15 +83,15 @@ unsigned int __stdcall AmmoHackThread(LPVOID arg) {
 
 // Manages Health Hack
 unsigned int __stdcall HealthHackThread(LPVOID arg) {
-	bool bSwitch = false;
-	bool bPress = false;
+	bool bSwitch		= false;
+	bool bPress			= false;
 	int iOriginalHealth = NULL;
 
 	while (true) {
 		Sleep(100);
 
 		if (dwHealthRegister) {
-			dwHealthPtr = dwHealthRegister + 0xF8;
+			dwHealthPtr		= dwHealthRegister + 0xF8;
 			iOriginalHealth = *(int *)dwHealthPtr;
 
 			while (true) {
@@ -103,16 +104,16 @@ unsigned int __stdcall HealthHackThread(LPVOID arg) {
 				if (bPress) {
 					if (dwHealthRegister) {
 						*(int *)dwHealthPtr = 1000;
-						bSwitch = true;
+						bSwitch				= true;
 					}
 				}
 				else {
 					if (bSwitch) {
 						*(int *)dwHealthPtr = iOriginalHealth;
-						bSwitch = false;
+						bSwitch				= false;
 					}
 					else {
-						iOriginalHealth = *(int *)dwHealthPtr;
+						iOriginalHealth		= *(int *)dwHealthPtr;
 					}
 				}
 			}
