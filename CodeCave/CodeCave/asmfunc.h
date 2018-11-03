@@ -22,10 +22,12 @@ DWORD	dwHealthPtr			= 0;
 DWORD	dwAmmoConstJmpBack	= 0;
 DWORD	dwAmmoSpeedJmpBack	= 0;
 DWORD	dwRecoilJmpBack		= 0;
+DWORD	dwSubHealthJmpBack	= 0;
 
 bool	bUnlimitedAmmo		= false;
 bool	bAmmoSpeed			= false;
 bool	bRecoilBack			= false;
+bool	bSubHealth			= false;
 
 // Assembler code to increase ammo and return back to program flow
 __declspec(naked) void InfiniteAmmo() {
@@ -135,6 +137,26 @@ __declspec(naked) void HealthHack() {
 		mov		dwHealthRegister, esi
 		mov		eax, [esi + 0xF8]
 		jmp		[dwHealthJmpBack]
+	}
+
+}
+
+__declspec(naked) void SubHealthHack() {
+
+	__asm
+	{
+
+		cmp		bSubHealth, 0x1
+		jl		SUBHEALTH
+		mov		eax, edi
+		jmp		[dwSubHealthJmpBack]
+
+		SUBHEALTH:
+		sub		[ebx + 0x04], edi
+		mov		eax, edi
+		jmp[dwSubHealthJmpBack]
+
+
 	}
 
 }

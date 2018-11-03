@@ -49,6 +49,10 @@ void DllProcess() {
 	DWORD dwRecoilAddress		= FindAddress(	"ac_client.exe",
 												"xxx??xxxxxxx?xx",
 												"\x50\x8d\x4c\x00\x00\x51\x8b\xce\xff\xd2\x8b\x46\x00\x3b\x05"	);
+	
+	DWORD dwSubHealthAddress = FindAddress(		"ac_client.exe",
+												"xx?xx",
+												"\x29\x7b\x00\x8b\xc7"											);
 
 
 	dwAddressAxis			-= 3;
@@ -61,6 +65,7 @@ void DllProcess() {
 	char szAmmoLim[]		= "Ammo Limiter";
 	char szSuperFullAuto[]	= "Super Full Auto";
 	char szNoRecoil[]		= "No Recoil";
+	char szSubHealth[]		= "Health Detractor";
 
 	// Writing to debug file
 	AddToWriteBuffer(dwAddress,				szUnAmmo);
@@ -69,6 +74,7 @@ void DllProcess() {
 	AddToWriteBuffer(dwAmmoConstAddress,	szAmmoLim);
 	AddToWriteBuffer(dwAmmoSpeedAddress,	szSuperFullAuto);
 	AddToWriteBuffer(dwRecoilAddress,		szNoRecoil);
+	AddToWriteBuffer(dwSubHealthAddress,	szSubHealth);
 
 	WriteToFile();
 
@@ -81,6 +87,7 @@ void DllProcess() {
 		MessageBoxAddress(dwAmmoConstAddress,	false);
 		MessageBoxAddress(dwAmmoSpeedAddress,	false);
 		MessageBoxAddress(dwRecoilAddress,		false);
+		MessageBoxAddress(dwSubHealthAddress,	false);
 	}
 
 	// JMP addresses after injected assembler
@@ -91,6 +98,7 @@ void DllProcess() {
 	dwAmmoConstJmpBack	= dwAmmoConstAddress	+ 0x7;
 	dwAmmoSpeedJmpBack	= dwAmmoSpeedAddress	+ 0x7;
 	dwRecoilJmpBack		= dwRecoilAddress		+ 0xA;
+	dwSubHealthJmpBack	= dwSubHealthAddress	+ 0x6;
 
 	// Code Injection
 	printf("Injecting Code...\n");
@@ -100,6 +108,7 @@ void DllProcess() {
 	WriteMemoryJmp((BYTE*)dwAmmoConstAddress,	(DWORD)AmmoAddressHack, 7);
 	WriteMemoryJmp((BYTE*)dwAmmoSpeedAddress,	(DWORD)AmmoSpeedHack,	7);
 	WriteMemoryJmp((BYTE*)dwRecoilAddress,		(DWORD)RecoilHack,		10);
+	WriteMemoryJmp((BYTE*)dwSubHealthAddress,	(DWORD)SubHealthHack,	6);
 }
 
 bool __stdcall DllMain(HINSTANCE	hInstance,

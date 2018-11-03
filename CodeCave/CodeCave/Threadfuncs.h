@@ -98,7 +98,11 @@ unsigned int __stdcall HealthHackThread(LPVOID arg) {
 				Sleep(100);
 
 				if (GetAsyncKeyState(VK_F1)) {
-					bPress = !bPress;
+					bPress		= !bPress;
+				}
+
+				if (GetAsyncKeyState(VK_F6)) {
+					bSubHealth	= !bSubHealth;
 				}
 
 				if (bPress) {
